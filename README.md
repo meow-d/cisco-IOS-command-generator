@@ -1,4 +1,7 @@
 # networking script generator
+>generates cisco IOS commands to setup subnets, DHCP, and RIP
+
+## features
 - automatically calculates subnet, network address, and ip addresses based on number of hosts needed
 - generates cisco IOS commands to setup subnets, DHCP, and RIP
 - ideal for lazy students who don't want to go through this tedious process manually
@@ -26,7 +29,7 @@
 5. copy and paste into each device
    1. protip: if you can't use `ctrl-v`, use `rightclick+uparrow`. super fast if you have a right click key on your keyboard
 
-## limitations
+## limitations (important!)
 will probably never fix because i'm done with this module
 - [ ] switch and router sections are seperate, meaning there are two subsections for each device. ideally each device should get one subsection with all of its commands
 - [ ] lack of flexibility. your question will almost always require you to do something different, which often requires you to change the commands manually.
@@ -34,3 +37,14 @@ will probably never fix because i'm done with this module
 - [ ] inefficient RIP configuration
   - it's not very effieient to keep exiting
   - in the example, routerABC doesn't have any rip configuration in the router section
+
+## License
+Distributed under the MIT license. See ``LICENSE`` for more information.
+
+## Contributing
+1. Fork it (<https://github.com/yourname/yourproject/fork>)
+2. Create your feature branch (`git checkout -b feature/fooBar`)
+3. Commit your changes (`git commit -am 'Add some fooBar'`)
+4. Push to the branch (`git push origin feature/fooBar`)
+5. Create a new Pull Request
+
