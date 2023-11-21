@@ -3,7 +3,14 @@
 - generates cisco IOS commands to setup subnets, DHCP, and RIP
 - ideal for lazy students who don't want to go through this tedious process manually
 
-## how to use
+## installation
+- download the project
+  - `git clone https://github.com/meow-d/cisco-IOS-command-generator`
+- install required packages
+  - `pip install -r requirements.txt`
+  - or `pip install lxml Markdown pandas`
+
+## usage
 1. manually edit the python if your questions demand something specific
 2. fill in the input table
    1. use whatever tool you want to fill in the markdown table
