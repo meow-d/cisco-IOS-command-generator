@@ -1,12 +1,11 @@
-import argparse
-
-from io import StringIO
-import markdown
 from textwrap import dedent
-
-import pandas as pd
+from io import StringIO
+import argparse
 import ipaddress
 import math
+
+import markdown
+import pandas as pd
 
 
 def parse_table(markdown_text):
@@ -61,8 +60,8 @@ def generate_commands(data, provided_address):
                         str(network_address) + "/" + str(subnet_mask_bits),
                         strict=False,
                     )
-                    first_usable_address = network.hosts().__next__()
-                    second_usable_address = network.hosts().__next__()
+                    first_usable_address = next(network.hosts())
+                    second_usable_address = next(network.hosts())
 
                     # for the next network
                     network_address = (
@@ -88,7 +87,7 @@ def generate_commands(data, provided_address):
                     )
 
                 commands = commands + dedent(
-                    f"""
+                    """
                     exit
                     exit
                     """
@@ -130,8 +129,8 @@ def generate_commands(data, provided_address):
                         str(network_address) + "/" + str(subnet_mask_bits),
                         strict=False,
                     )
-                    first_usable_address = network.hosts().__next__()
-                    second_usable_address = network.hosts().__next__()
+                    first_usable_address = next(network.hosts())
+                    second_usable_address = next(network.hosts())
 
                     # for the next network
                     network_address = (
@@ -157,7 +156,7 @@ def generate_commands(data, provided_address):
                     )
 
                 commands = commands + dedent(
-                    f"""
+                    """
                     router rip
                     default-information originate
                     exit
@@ -179,7 +178,7 @@ def main():
     )
     args = parser.parse_args()
 
-    with open(args.filename, "r") as f:
+    with open(args.filename, "r", encoding="utf-8") as f:
         markdown_text = f.read()
     data = parse_table(markdown_text)
     commands = generate_commands(data, "200.20.10.0")
