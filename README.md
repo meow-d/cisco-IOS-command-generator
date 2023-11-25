@@ -43,6 +43,8 @@ will probably never fix because i'm done with this module
 Distributed under the MIT license. See ``LICENSE`` for more information.
 
 ## Contributing
+Don't know why would anyone contribute, but do it if you want.
+
 1. Fork it (<https://github.com/yourname/yourproject/fork>)
 2. Create your feature branch (`git checkout -b feature/fooBar`)
 3. Commit your changes (`git commit -am 'Add some fooBar'`)
