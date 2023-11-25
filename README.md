@@ -1,7 +1,7 @@
 # networking script generator
 >generates cisco IOS commands to setup subnets, DHCP, and RIP
 
-- ideal for lazy students who don't want to go through this tedious process manually
+- ideal for lazy students who don't want to go through this tedious process manually, and would rather edit and debug a script
 
 ## features
 - automatically calculates subnet, network address, and ip addresses based on number of hosts needed
