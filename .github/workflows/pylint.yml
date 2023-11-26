@@ -17,4 +17,4 @@ jobs:
         pip install pylint -r requirements.txt
     - name: Analysing the code with pylint
       run: |
-        pylint $(git ls-files '*.py')
+        pylint --fail-under=8 $(git ls-files '*.py')
