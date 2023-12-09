@@ -1,15 +1,24 @@
 from textwrap import dedent
 from io import StringIO
-import argparse
 import ipaddress
+import argparse
 import math
+import sys
 
 import markdown
 import pandas as pd
+from bs4 import BeautifulSoup, Tag
 
 
 def parse_table(markdown_text):
     html_table = StringIO(markdown.markdown(markdown_text, extensions=["tables"]))
+
+    soup = BeautifulSoup(html_table.getvalue(), "html.parser")
+    for element in soup.recursiveChildGenerator():
+        if isinstance(element, Tag):
+            if element.name not in ["table", "thead", "tbody", "tr", "th", "td"]:
+                raise ValueError("Your markdown should contain only the table")
+
     data = pd.read_html(html_table)[0]
     data.set_index("name", inplace=True)
     data = data.groupby("type")
@@ -174,14 +183,40 @@ def main():
         description="Generates Cisco IOS commands to setup subnets, DHCP, and RIP"
     )
     parser.add_argument(
-        "filename", help="input markdown file. should contain only the input table"
+        "input_table",
+        metavar="input-table",
+        help="input markdown file. should contain only the input table",
     )
+    parser.add_argument("address", help="the ip address space you're given. ipv4 only")
     args = parser.parse_args()
 
-    with open(args.filename, "r", encoding="utf-8") as f:
-        markdown_text = f.read()
-    data = parse_table(markdown_text)
-    commands = generate_commands(data, "200.20.10.0")
+    try:
+        with open(args.input_table, "r", encoding="utf-8") as f:
+            markdown_text = f.read()
+    except FileNotFoundError:
+        print("File not found")
+        sys.exit(1)
+
+    try:
+        data = parse_table(markdown_text)
+    except ValueError as e:
+        print(e)
+        sys.exit(1)
+    except ModuleNotFoundError as e:
+        print(e)
+        print(
+            "If you get this error, your markdown likely contains something other than the table"
+        )
+        print("Your markdown should contain only the table")
+        sys.exit(1)
+
+    try:
+        address = ipaddress.IPv4Address(args.address)
+    except ValueError:
+        print("Invalid IPv4 address")
+        sys.exit(1)
+
+    commands = generate_commands(data, address)
     print(commands)
 
 
