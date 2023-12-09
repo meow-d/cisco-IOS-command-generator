@@ -38,6 +38,7 @@ will probably never fix because i'm done with this module
 - [ ] inefficient RIP configuration
   - it's not very effieient to keep exiting
   - in the example, routerABC doesn't have any rip configuration in the router section
+- [ ] no ipv6 support
 
 ## License
 Distributed under the MIT license. See ``LICENSE`` for more information.
