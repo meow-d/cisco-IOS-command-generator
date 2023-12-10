@@ -55,27 +55,12 @@ def generate_commands(data, provided_address):
                 )
 
                 for index, row in data_group.iterrows():
-                    # subnet calculations
-                    hosts_count = int(row["hosts"])
-                    min_power_of_2 = math.ceil(math.log2(hosts_count + 1))
-                    network_size = int(2**min_power_of_2)
-                    subnet_mask_bits = 32 - min_power_of_2
-                    subnet_mask = (
-                        ipaddress.ip_address("255.255.255.255") - network_size + 1
-                    )
-
-                    # address calculations
-                    network = ipaddress.ip_network(
-                        str(network_address) + "/" + str(subnet_mask_bits),
-                        strict=False,
-                    )
-                    first_usable_address = next(network.hosts())
-                    second_usable_address = next(network.hosts())
-
-                    # for the next network
-                    network_address = (
-                        ipaddress.ip_address(network_address) + network_size
-                    )
+                    (
+                        subnet_mask,
+                        first_usable_address,
+                        second_usable_address,
+                        network,
+                    ) = calculate_addresses(int(row["hosts"]), network_address)
 
                     commands = commands + dedent(
                         f"""
@@ -124,27 +109,12 @@ def generate_commands(data, provided_address):
                 )
 
                 for index, row in data_group.iterrows():
-                    # subnet calculations
-                    hosts_count = int(row["hosts"])
-                    min_power_of_2 = math.ceil(math.log2(hosts_count + 1))
-                    network_size = int(2**min_power_of_2)
-                    subnet_mask_bits = 32 - min_power_of_2
-                    subnet_mask = (
-                        ipaddress.ip_address("255.255.255.255") - network_size + 1
-                    )
-
-                    # address calculations
-                    network = ipaddress.ip_network(
-                        str(network_address) + "/" + str(subnet_mask_bits),
-                        strict=False,
-                    )
-                    first_usable_address = next(network.hosts())
-                    second_usable_address = next(network.hosts())
-
-                    # for the next network
-                    network_address = (
-                        ipaddress.ip_address(network_address) + network_size
-                    )
+                    (
+                        subnet_mask,
+                        first_usable_address,
+                        second_usable_address,
+                        network,
+                    ) = calculate_addresses(int(row["hosts"]), network_address)
 
                     commands = commands + dedent(
                         f"""
@@ -176,6 +146,27 @@ def generate_commands(data, provided_address):
                 )
 
     return commands
+
+
+def calculate_addresses(hosts_count: int, network_address: ipaddress.IPv4Address):
+    # subnet calculations
+    min_power_of_2 = math.ceil(math.log2(hosts_count + 1))
+    network_size = int(2**min_power_of_2)
+    subnet_mask_bits = 32 - min_power_of_2
+    subnet_mask = ipaddress.IPv4Address("255.255.255.255") - network_size + 1
+
+    # address calculations
+    network = ipaddress.ip_network(
+        str(network_address) + "/" + str(subnet_mask_bits),
+        strict=False,
+    )
+    first_usable_address = next(network.hosts())
+    second_usable_address = next(network.hosts())
+
+    # for the next network
+    network_address = ipaddress.IPv4Address(network_address) + network_size
+
+    return subnet_mask, first_usable_address, second_usable_address, network
 
 
 def main():
